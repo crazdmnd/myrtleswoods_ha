@@ -1,0 +1,32 @@
+# Example configuration.yaml entry
+#alarmdecoder:
+  device:
+    type: socket
+    host: !secret alarmdecoder_host
+    port: !secret alarmdecoder_port
+  panel_display: false
+  zones:
+    01:
+      name: 'Fire Alarm'
+      type: 'smoke'
+    02:
+      name: 'Basement Man Door'
+      type: 'opening'
+    03:
+      name: 'Great Room Motion'
+      type: 'motion'
+    04:
+      name: 'Front Sitting Room Motion'
+      type: 'motion'
+    05:
+      name: 'Master Bedroom Motion'
+      type: 'motion'
+    06:
+      name: 'Master and Front Doors'
+      type: 'door'
+    07:
+      name: 'Mud Room and Great Room Doors'
+      type: 'door'
+    08:
+      name: 'Garage Door'
+      type: 'garage_door'

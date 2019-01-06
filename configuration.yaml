@@ -1,0 +1,284 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: MyrtlesWoods
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret lat
+  longitude: !secret lon
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 309
+  # metric for Metric, imperial for Imperial
+  unit_system: imperial
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: America/New_York
+  # Customization file
+  customize: !include customize.yaml
+
+# Show links to resources in log and frontend
+introduction:
+
+# Enables the frontend
+frontend:
+
+#hassio:
+
+# Enables configuration UI
+config:
+
+#duckdns:
+#  domain: examplehome
+#  access_token: f1d61004-c765-49d3-bb23-52a59748f0d4
+
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+http:
+  api_password: !secret api_pw
+  base_url: myrtleswoods.duckdns.org
+  ssl_certificate: /etc/letsencrypt/live/myrtleswoods.duckdns.org/fullchain.pem
+  ssl_key: /etc/letsencrypt/live/myrtleswoods.duckdns.org/privkey.pem
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  # include_used_components: true
+
+notify:
+  - name: email
+    platform: smtp
+    server: smtp.gmail.com
+    port: 587
+    timeout: 15
+    starttls: true
+    username: !secret ha_email
+    password: !secret ha_email_pw
+    recipient: 
+      - brian@myrtleswoods.com
+    sender: do_not_reply@myrtleswoods.com
+    sender_name: SmartMyrtlesWoods
+    debug: true
+
+  - platform: command_line
+    name: alexa_livingroom
+    command: "/home/homeassistant/.homeassistant/alexa_wrapper.sh -d 'Dot_LivingRoom'"
+
+  - platform: command_line
+    name: alexa_loft
+    command: "/home/homeassistant/.homeassistant/alexa_wrapper.sh -d 'Dot_Loft'"
+
+  - platform: command_line
+    name: alexa_all
+    command: "/home/homeassistant/.homeassistant/alexa_wrapper.sh -d ALL"
+
+
+ios:
+
+ifttt:
+  key: !secret ifttt_key
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time
+history:
+
+# View all events in a logbook
+logbook:
+
+# Enables a map showing the location of tracked devices
+map:
+
+#notify:
+
+# Track the sun
+sun:
+
+ffmpeg:
+
+# Sensors
+sensor:
+  # Weather prediction
+  - platform: darksky
+    api_key: !secret darksky_key
+    forecast:
+      - 0
+    monitored_conditions:
+      - summary
+      - icon
+      - temperature
+
+  - platform: speedtest
+    monitored_conditions:
+      - ping
+      - download
+      - upload
+
+  # SSL Certificacte Update Renewal Sensor
+  - platform: command_line
+    name: SSL cert expiry
+    unit_of_measurement: days
+    scan_interval: 10800
+    command: "ssl-cert-check -b -c /etc/letsencrypt/live/myrtleswoods.duckdns.org/cert.pem | awk '{ print $NF }'"
+
+  - platform: ring
+
+#TPLink Energy Monitoring
+  - platform: template
+    sensors:
+      washer_amps:
+        friendly_name_template: "{{ states.switch.washer.name}} Current Amps"
+        value_template: '{{ states.switch.washer.attributes["current_a"] | float }}'
+        unit_of_measurement: 'A'
+      washer_watts:
+        friendly_name_template: "{{ states.switch.washer.name}} Current Consumption"
+        value_template: '{{ states.switch.washer.attributes["current_power_w"] | float }}'
+        unit_of_measurement: 'W'
+      washer_total_kwh:
+        friendly_name_template: "{{ states.switch.washer.name}} Total Consumption"
+        value_template: '{{ states.switch.washer.attributes["total_energy_kwh"] | float }}'
+        unit_of_measurement: 'kWh'
+      washer_volts:
+        friendly_name_template: "{{ states.switch.washer.name}} Voltage"
+        value_template: '{{ states.switch.washer.attributes["voltage"] | float }}'
+        unit_of_measurement: 'V'
+      washer_today_kwh:
+        friendly_name_template: "{{ states.switch.washer.name}} Today's Consumption"
+        value_template: '{{ states.switch.washer.attributes["today_energy_kwh"] | float }}'
+        unit_of_measurement: 'kWh'
+
+#Christmas Tree Monitoring (Replace xmas_tree when moved after christmas)
+  - platform: template
+    sensors:
+      xmas_tree_amps:
+        friendly_name_template: "{{ states.switch.xmas_tree.name}} Current"
+        value_template: '{{ states.switch.xmas_tree.attributes["current_a"] | float }}'
+        unit_of_measurement: 'A'
+      xmas_tree_watts:
+        friendly_name_template: "{{ states.switch.xmas_tree.name}} Current Consumption"
+        value_template: '{{ states.switch.xmas_tree.attributes["current_power_w"] | float }}'
+        unit_of_measurement: 'W'
+      xmas_tree_total_kwh:
+        friendly_name_template: "{{ states.switch.xmas_tree.name}} Total Consumption"
+        value_template: '{{ states.switch.xmas_tree.attributes["total_energy_kwh"] | float }}'
+        unit_of_measurement: 'kWh'
+      xmas_tree_volts:
+        friendly_name_template: "{{ states.switch.xmas_tree.name}} Voltage"
+        value_template: '{{ states.switch.xmas_tree.attributes["voltage"] | float }}'
+        unit_of_measurement: 'V'
+      xmas_tree_today_kwh:
+        friendly_name_template: "{{ states.switch.xmas_tree.name}} Today's Consumption"
+        value_template: '{{ states.switch.xmas_tree.attributes["today_energy_kwh"] | float }}'
+        unit_of_measurement: 'kWh'
+
+# Text to speech
+tts:
+  - platform: google
+
+# Cloud
+cloud:
+
+#calendar:
+#  - platform: todoist
+#    token: !secret todoist_key
+
+#shell_command:
+#  renew_ssl: ~/certbot/certbot-auto renew --quiet --no-self-upgrade --standalone --preferred-challenges tls-sni-01 --tls-sni-01-port 8123 --pre-hook "sudo systemctl stop home-assistant@homeassistant.service" --post-hook "sudo systemctl start home-assistant@homeassistant.service"
+
+group: !include groups.yaml
+
+shell_command:
+  renew_ssl: ~/certbot/certbot-auto renew --quiet --no-self-upgrade --standalone --preferred-challenges tls-sni-01 --tls-sni-01-port 8123 --pre-hook "sudo systemctl stop home-assistant@homeassistant.service" --post-hook "sudo systemctl start home-assistant@homeassistant.service"
+
+automation: !include automations.yaml
+
+script: !include scripts.yaml
+
+input_boolean:
+  sengled_basemententry:
+    name: Basement Light - Entry
+    initial: off
+    icon: mdi:light
+
+  washer_switch:
+    name: Washing Machine
+    initial: off
+    icon: mdi:washing-machine
+
+light:
+  - platform: decora_wifi
+    username: !secret decora_user
+    password: !secret decora_pw
+
+switch:
+  - platform: tplink
+    host: 192.168.1.103
+    name: Christmas Tree
+  - platform: tplink
+    host: 192.168.1.102
+    name: Washer
+  - platform: command_line
+    switches:
+      loft_tv_power:
+        friendly_name: "Loft TV Power"
+        command_on: 'curl -X POST http://192.168.1.9:8060/keypress/PowerOn'
+        command_off: 'curl -X POST http://192.168.1.9:8060/keypress/PowerOff'
+        command_state: 'curl -s GET http://192.168.1.9:8060/query/device-info | grep power-mode | sed -e "s:<power-mode>DisplayOff</power-mode>:OFF:" -e "s:<power-mode>PowerOn</power-mode>:ON:"'
+        value_template: '{{ value == "ON" }}'
+
+ring:
+  username: !secret ring_user
+  password: !secret ring_pw
+
+binary_sensor:
+  - platform: ring
+
+camera:
+  - platform: ring
+
+media_player:
+  - platform: webostv
+    host: 192.168.1.101
+#   mac: E4:3E:D7:D1:DA:E8
+    timeout: 5
+    name: Sitting Room TV
+#   filename: webostv.conf
+    turn_on_action:
+      service: wake_on_lan.send_magic_packet
+      data:
+        mac: e4:3e:d7:d1:da:e8
+
+  - platform: firetv
+    name: Master Bedroom FireTV Stick
+    host: 192.168.1.8
+    adbkey: "/home/homeassistant/.homeassistant/adbkey"
+
+device_tracker:
+  - platform: netgear
+    password: !secret netgear_pw
+  - platform: icloud
+    username: !secret icloud_user
+    password: !secret icloud_pw
+    account_name: iCloud
+
+alarmdecoder: !include alarmdecoder.yaml
+
+#alarm_control_panel:
+#  - platform: alarmdecoder
+
+alexa:
+  flash_briefings:
+    whoishome:
+      - title: Who's at home?
+        text: >
+          {%- if is_state('device_tracker.brian_iphone', 'home') and
+                 is_state('device_tracker.iphone', 'home') -%}
+            You are both home, you silly
+          {%- else -%}
+            Brian is at {{ states("device_tracker.brian_iphone") }}
+            and Melanie is at {{ states("device_tracker.iphone") }}
+          {% endif %}
+

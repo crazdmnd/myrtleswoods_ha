@@ -1,0 +1,9 @@
+2019-01-06 16:09:45 WARNING (MainThread) [homeassistant.components.http] legacy_api_password support has been enabled. If you don't require it, remove the 'api_password' from your http config.
+2019-01-06 16:09:48 WARNING (Thread-15) [homeassistant.components.media_player.webostv] LG webOS TV 192.168.1.101 needs to be paired
+2019-01-06 16:09:59 WARNING (MainThread) [homeassistant.components.sensor.template] Could not render template xmas_tree_volts, the state is unknown.
+2019-01-06 16:09:59 WARNING (MainThread) [homeassistant.components.sensor.template] Could not render template xmas_tree_watts, the state is unknown.
+2019-01-06 16:09:59 WARNING (MainThread) [homeassistant.components.sensor.template] Could not render template xmas_tree_today_kwh, the state is unknown.
+2019-01-06 16:09:59 WARNING (MainThread) [homeassistant.components.sensor.template] Could not render template xmas_tree_total_kwh, the state is unknown.
+2019-01-06 16:09:59 WARNING (MainThread) [homeassistant.components.sensor.template] Could not render template xmas_tree_amps, the state is unknown.
+2019-01-06 16:26:11 WARNING (MainThread) [homeassistant.helpers.entity] Update of media_player.roku_ultra is taking over 10 seconds
+2019-01-06 16:26:12 WARNING (MainThread) [homeassistant.components.media_player] Updating roku media_player took longer than the scheduled update interval 0:00:10
